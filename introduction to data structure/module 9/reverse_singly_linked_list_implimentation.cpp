@@ -1,30 +1,16 @@
-#include<bits/stdc++.h>
+ #include<bits/stdc++.h>
 using namespace std;
-
 class Node
 {
     public:
     int val;
     Node* next;
-    Node* prev;
     Node(int val)
     {
         this->val=val;
         this->next=NULL;
-        this->prev=NULL;
     }
 };
-
-void print_forward(Node* head)
-{
-    Node* temp=head;
-    while(temp!=NULL)
-    {
-        cout<<temp->val<< " ";
-        temp=temp->next;
-    }
-    cout<<endl;
-}
 
 void insert_at_tail(Node* &head,Node* &tail,int val)
 {
@@ -35,16 +21,30 @@ void insert_at_tail(Node* &head,Node* &tail,int val)
         tail=newnode;
         return;
     }
-    newnode->prev=tail;
     tail->next=newnode;
     tail=newnode;
 }
 
-void reverse(Node* &head,Node* &tail)
+void reverse(Node* &head,Node* &tail,Node* temp)
 {
-    for(Node* i=head,*j=tail;i!=j && i->prev!=j;i=i->next,j=j->prev)
+    if(temp->next==NULL)
     {
-        swap(i->val,j->val);
+        head=temp;
+        return;
+    }
+    reverse(head,tail,temp->next);
+    temp->next->next=temp;
+    temp->next=NULL;
+    tail=temp;
+}
+
+void print_linked_list(Node* &head)
+{
+    Node* temp=head;
+    while(temp!=NULL)
+    {
+        cout<<temp->val<< " ";
+        temp=temp->next;
     }
 }
 
@@ -52,7 +52,7 @@ int main()
 {
     Node* head=NULL;
     Node* tail=NULL;
-    
+
     int val;
     while(true)
     {
@@ -63,12 +63,9 @@ int main()
         }
         insert_at_tail(head,tail,val);
     }
-    
-    reverse(head,tail);
-    cout<< "List reversed"<<endl;
-    print_forward(head);
-    cout<< "Head value"<<endl;
-    cout<<head->val<<endl;
-    cout<< "Tail value"<<endl;
+    reverse(head,tail,head);
+    print_linked_list(head);
+    cout<<endl;
+    cout<<head->val<<endl;        //it shows the list is reversed
     cout<<tail->val<<endl;
 }
